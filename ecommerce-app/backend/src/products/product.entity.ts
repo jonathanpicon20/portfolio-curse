@@ -1,5 +1,11 @@
 // src/products/product.entity.ts
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "../users/user.entity";
 
 @Entity()
@@ -23,4 +29,6 @@ export class Product {
 
   @ManyToOne(() => User, (user) => user.products, { eager: false })
   createdBy: User;
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 }

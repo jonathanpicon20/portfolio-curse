@@ -1,7 +1,7 @@
 // src/products/products.service.ts
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { IsNull, Repository } from "typeorm";
 import { CreateProductDto } from "../dto/create-product.dto";
 import { UpdateProductDto } from "../dto/update-product.dto";
 import { User } from "../users/user.entity";
@@ -18,17 +18,20 @@ export class ProductsService {
     const product = this.productRepo.create({ ...dto, createdBy: user });
     return this.productRepo.save(product);
   }
-
   findAll() {
-    return this.productRepo.find({ relations: ["createdBy"] });
-  }
-
-  async findOne(id: number) {
-    const product = await this.productRepo.findOne({
-      where: { id },
+    return this.productRepo.find({
+      where: { deletedAt: IsNull() }, // ⛔ Excluye productos eliminados
       relations: ["createdBy"],
     });
-    if (!product) throw new NotFoundException("Producto no encontrado");
+  }
+
+  async findOne(id: number): Promise<Product> {
+    const product = await this.productRepo.findOne({
+      where: { id, deletedAt: IsNull() },
+    });
+    if (!product) {
+      throw new NotFoundException(`Producto con id ${id} no encontrado`);
+    }
     return product;
   }
 
@@ -39,6 +42,7 @@ export class ProductsService {
 
   async remove(id: number) {
     const product = await this.findOne(id);
-    return this.productRepo.remove(product);
+    await this.productRepo.softRemove(product); // ✅ Esto marca el producto como eliminado
+    return `Producto  ${product.name} ha sido eliminado con éxito`;
   }
 }

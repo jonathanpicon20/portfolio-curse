@@ -1,5 +1,5 @@
 # Usamos Node.js 20 (última versión estable)
-FROM node:24-alpine
+FROM node:18-alpine
 
 # Crear directorio de la app
 WORKDIR /usr/src/app
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Comando para correr la app en modo producción
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
