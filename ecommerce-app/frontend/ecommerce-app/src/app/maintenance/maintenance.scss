@@ -1,0 +1,47 @@
+.construction-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f2f2f2, #e0e0e0);
+
+  .content {
+    text-align: center;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+
+    img {
+      width: 100px;
+      margin-bottom: 1rem;
+      animation: bounce 2s infinite;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #ff6f00;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    .sub {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: #666;
+    }
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
