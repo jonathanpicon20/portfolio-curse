@@ -1,0 +1,50 @@
+# Docker Compose file for an e-commerce application with a MySQL database and a backend service
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ecommerce-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword123
+      MYSQL_DATABASE: ecommerce_db
+      MYSQL_USER: ecommerce_user
+      MYSQL_PASSWORD: ecommerce_pass123
+    ports:
+      - "3306:3306"
+    volumes:
+      - /var/lib/mysql
+    networks:
+      - ecommerce-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ecommerce-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DB_HOST: ecommerce-mysql
+      DB_PORT: 3306
+      DB_USER: ecommerce_user
+      DB_PASS: ecommerce_pass123
+      DB_NAME: ecommerce_db
+      JWT_SECRET: supersecreto123
+    depends_on:
+      - mysql
+
+    networks:
+      - ecommerce-network
+    volumes:
+      - ./backend:/usr/src/app
+      - ./backend/node_modules:/usr/src/app/node_modules
+volumes:
+  mysql-data:
+    driver: local
+    
+
+networks:
+  ecommerce-network:
+
